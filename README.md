@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⬛ SKILLPROOF
+# ⬛ SKILLSYNC
 
 ### *Your code doesn't lie.*
 
@@ -15,7 +15,7 @@
 
 ```
 ╔════════════════════════════════════════════════════════════════╗
-║  SKILLPROOF  ·  SYSTEM ACTIVE                 ↑ ONLINE        ║
+║  SKILLSYNC  ·  SYSTEM ACTIVE                 ↑ ONLINE        ║
 ╠════════════════════════════════════════════════════════════════╣
 ║  Connecting GitHub API... ✓    LeetCode API... ✓    AI... ✓   ║
 ╚════════════════════════════════════════════════════════════════╝
@@ -25,9 +25,9 @@
 
 ---
 
-## 🧠 What is SkillProof?
+## 🧠 What is SkillSync?
 
-SkillProof is a **proof-based skill intelligence platform** that connects your real coding activity — not your résumé, not your claims — and compiles it into an undeniable technical portfolio backed by live data.
+SkillSync is a **proof-based skill intelligence platform** that connects your real coding activity — not your résumé, not your claims — and compiles it into an undeniable technical portfolio backed by live data.
 
 It extracts **real signal** from your GitHub repositories and LeetCode activity, maps it against 120K+ live job market listings, and uses **Groq's LLaMA-3.3-70B** to generate a personalized, ruthless improvement roadmap.
 
@@ -122,8 +122,8 @@ Key: process.env.GROQ_API_KEY  ← Never exposed to the browser
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/skillproof
-cd skillproof
+git clone https://github.com/your-username/skillsync
+cd skillsync
 
 # 2. Install dependencies
 npm install
@@ -167,7 +167,7 @@ Open [http://localhost:3000](http://localhost:3000) 🎉
 ## 📁 Project Structure
 
 ```
-skillproof/
+skillsync/
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -241,7 +241,7 @@ Font Stack:
 
 ## 📜 License
 
-MIT © SkillProof · Built for judges, not recruiters.
+MIT © SkillSync · Built for judges, not recruiters.
 
 ---
 
@@ -249,6 +249,6 @@ MIT © SkillProof · Built for judges, not recruiters.
 
 *"Your commit history doesn't lie. Your skill bars shouldn't either."*
 
-**⬛ SKILLPROOF**
+**⬛ SKILLSYNC**
 
 </div>

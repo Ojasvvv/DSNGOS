@@ -5,7 +5,7 @@ export function Navbar() {
         <nav className="fixed top-0 left-0 right-0 z-[100] h-[52px] bg-bg/96 border-b border-border-dark flex items-center px-8 gap-8 backdrop-blur-md">
             <div className="font-display text-[15px] font-extrabold tracking-[-0.02em] flex items-center gap-2">
                 <span className="w-2 h-2 bg-gold inline-block"></span>
-                SKILLPROOF
+                SKILLSYNC
             </div>
             <div className="font-mono text-[10px] text-dimmed ml-1 hidden sm:block">
                 / INTELLIGENCE PLATFORM

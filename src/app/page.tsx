@@ -258,7 +258,7 @@ export default function Home() {
       {/* Footer */}
       <div className="bg-bg1 border-t border-border-dark py-4 px-16 flex items-center justify-between">
         <div className="font-mono text-[10px] text-dimmed tracking-[0.08em]">
-          SKILLPROOF v0.9-beta · Data sourced from GitHub API, LeetCode GraphQL, LinkedIn Jobs
+          SKILLSYNC v0.9-beta · Data sourced from GitHub API, LeetCode GraphQL, LinkedIn Jobs
         </div>
         <div className="flex gap-6">
           {["Privacy", "API Docs", "GitHub", "Feedback"].map(l => (

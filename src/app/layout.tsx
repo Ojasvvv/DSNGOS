@@ -21,7 +21,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillProof — Proof-Based Skill Intelligence",
+  title: "SkillSync — Proof-Based Skill Intelligence",
   description: "Proof-based skill analysis and market intelligence platform.",
 };
 
