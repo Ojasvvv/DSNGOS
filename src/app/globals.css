@@ -1,0 +1,85 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text-main);
+  
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-syne), sans-serif;
+
+  --color-bg: #0a0a0a;
+  --color-bg1: #111111;
+  --color-bg2: #161616;
+  --color-bg3: #1e1e1e;
+  --color-border-dark: #2a2a2a;
+  --color-border-light: #333333;
+  --color-text-main: #e8e8e8;
+  --color-text-muted: #666666;
+  --color-text-dimmed: #444444;
+  
+  --color-gold: #f5a623;
+  --color-gold-dim: #c47d0e;
+  --color-green: #22c55e;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  --color-purple: #a78bfa;
+
+  /* Shadcn standard mappings overridden for dark theme */
+  --color-sidebar-ring: var(--gold);
+  --color-sidebar-border: var(--border-dark);
+  --color-sidebar-accent-foreground: var(--text-main);
+  --color-sidebar-accent: var(--bg2);
+  --color-sidebar-primary-foreground: #000;
+  --color-sidebar-primary: var(--gold);
+  --color-sidebar-foreground: var(--text-main);
+  --color-sidebar: var(--bg1);
+  --color-ring: var(--gold);
+  --color-input: var(--border-dark);
+  --color-border: var(--border-dark);
+  --color-destructive: var(--red);
+  --color-accent-foreground: var(--text-main);
+  --color-accent: var(--bg3);
+  --color-muted-foreground: var(--text-muted);
+  --color-muted: var(--bg3);
+  --color-secondary-foreground: var(--text-main);
+  --color-secondary: var(--bg2);
+  --color-primary-foreground: #000;
+  --color-primary: var(--gold);
+  --color-popover-foreground: var(--text-main);
+  --color-popover: var(--bg1);
+  --color-card-foreground: var(--text-main);
+  --color-card: var(--bg1);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bg text-text-main font-sans;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+  a, button, [role="button"], input, select, textarea {
+    cursor: crosshair;
+  }
+}

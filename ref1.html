@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillProof — Proof-Based Skill Intelligence</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg1: #111111;
+            --bg2: #161616;
+            --bg3: #1e1e1e;
+            --border: #2a2a2a;
+            --border-light: #333;
+            --text: #e8e8e8;
+            --muted: #666;
+            --dimmed: #444;
+            --gold: #f5a623;
+            --gold-dim: #c47d0e;
+            --green: #22c55e;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --purple: #a78bfa;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+            --display: 'Syne', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        /* HEADER NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 52px;
+            background: rgba(10, 10, 10, 0.96);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            gap: 32px;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-logo {
+            font-family: var(--display);
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            display: inline-block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-badge {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--gold);
+            border: 1px solid var(--gold-dim);
+            padding: 2px 8px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* TICKER BAR */
+        .ticker {
+            position: fixed;
+            top: 52px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            height: 28px;
+            background: var(--bg1);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-inner {
+            display: flex;
+            gap: 40px;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+            padding-left: 100%;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        .ticker-item .up {
+            color: var(--green);
+        }
+
+        .ticker-item .down {
+            color: var(--red);
+        }
+
+        @keyframes ticker {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* MAIN LAYOUT */
+        main {
+            margin-top: 80px;
+            min-height: 100vh;
+        }
+
+        /* HERO / INPUT SECTION */
+        .hero {
+            padding: 80px 64px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-family: var(--display);
+            font-size: clamp(40px, 5vw, 72px);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            margin-bottom: 20px;
+        }
+
+        .hero-text h1 em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+        .hero-sub {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+            line-height: 1.8;
+            max-width: 380px;
+            margin-bottom: 32px;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+        }
+
+        .meta-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .meta-stat .val {
+            font-family: var(--mono);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .meta-stat .lbl {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--dimmed);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .meta-divider {
+            width: 1px;
+            background: var(--border);
+            align-self: stretch;
+        }
+
+        /* INPUT FORM */
+        .input-panel {
+            background: var(--bg1);
+            border: 1px solid var(--border);
+            padding: 0;
+            position: relative;
+        }
+
+        .panel-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .panel-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--green);
+            letter-spacing: 0.08em;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .panel-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--dimmed);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .label-tag {
+            font-size: 8px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            padding: 1px 5px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: stretch;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            transition: border-color 0.2s;
+        }
+
+        .input-row:focus-within {
+            border-color: var(--gold-dim);
+        }
+
+        .input-prefix {
+            padding: 10px 12px;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 14px;
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--text);
+            caret-color: var(--gold);
+        }
+
+        .input-field::placeholder {
+            color: var(--dimmed);
+            font-size: 12px;
+        }
+
+        .role-select-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .role-chip {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .role-chip:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+            background: rgba(245, 166, 35, 0.04);
+        }
+
+        .role-chip.active {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(245, 166, 35, 0.08);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold);
+            border: none;
+            color: #000;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .analyze-btn:hover {
+            background: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-arrow {
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .analyze-btn:hover .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        /* DIVIDER */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 0;
+        }
+
+        /* DASHBOARD SECTION */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 64px 80px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            padding: 40px 0 24px;
+        }
+
+        .section-head h2 {
+            font-family: var(--display);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .section-code {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--dimmed);
+            letter-spacing: 0.06em;
+        }
+
+        /* GRID LAYOUTS */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .grid-2-1 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-top: 1px;
+        }
+
+        .grid-cell {
+            background: var(--bg1);
+            padding: 24px;
+        }
+
+        .cell-label {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--dimmed);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .cell-value {
+            font-family: var(--mono);
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .cell-sub {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .delta-up {
+            color: var(--green);
+        }
+
+        .delta-down {
+            color: var(--red);
+        }
+
+        /* SKILL BARS */
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 4px;
+        }
+
+        .skill-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .skill-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .skill-name {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text);
+            letter-spacing: 0.03em;
+        }
+
+        .skill-pct {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .skill-bar {
+            height: 2px;
+            background: var(--bg3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-fill {
+            height: 100%;
+            background: var(--gold);
+            position: relative;
+            animation: fillBar 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: calc(var(--i) * 0.08s);
+            transform-origin: left;
+        }
+
+        @keyframes fillBar {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .skill-fill.green {
+            background: var(--green);
+        }
+
+        .skill-fill.red {
+            background: var(--red);
+        }
+
+        .skill-fill.blue {
+            background: var(--blue);
+        }
+
+        .skill-fill.purple {
+            background: var(--purple);
+        }
+
+        /* HEATMAP */
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(52, 1fr);
+            gap: 2px;
+            margin-top: 8px;
+        }
+
+        .heatmap-col {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .heatmap-cell {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg3);
+        }
+
+        .h0 {
+            background: var(--bg3);
+        }
+
+        .h1 {
+            background: rgba(245, 166, 35, 0.2);
+        }
+
+        .h2 {
+            background: rgba(245, 166, 35, 0.4);
+        }
+
+        .h3 {
+            background: rgba(245, 166, 35, 0.65);
+        }
+
+        .h4 {
+            background: var(--gold);
+        }
+
+        /* DIFFICULTY RINGS */
+        .difficulty-rings {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .ring-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ring {
+            position: relative;
+            width: 70px;
+            height: 70px;
+        }
+
+        .ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: var(--bg3);
+            stroke-width: 4;
+        }
+
+        .ring-fill {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 176;
+            stroke-dashoffset: 176;
+            animation: ringFill 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes ringFill {
+            to {
+                stroke-dashoffset: var(--offset);
+            }
+        }
+
+        .ring-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+        }
+
+        .ring-num {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .ring-pct {
+            font-size: 8px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .diff-name {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* MARKET SCORE */
+        .market-score-display {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin: 8px 0 20px;
+        }
+
+        .score-big {
+            font-family: var(--display);
+            font-size: 80px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.04em;
+            color: var(--gold);
+        }
+
+        .score-denom {
+            font-family: var(--mono);
+            font-size: 20px;
+            color: var(--dimmed);
+            margin-bottom: 10px;
+        }
+
+        .score-desc {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* MARKET DEMAND TABLE */
+        .demand-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+
+        .demand-table th {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--dimmed);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 0 0 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .demand-table td {
+            font-family: var(--mono);
+            font-size: 11px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--bg2);
+            vertical-align: middle;
+        }
+
+        .demand-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .skill-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 10px;
+            border: 1px solid var(--border);
+            letter-spacing: 0.04em;
+        }
+
+        .bar-mini {
+            height: 2px;
+            background: var(--bg3);
+            width: 80px;
+            position: relative;
+        }
+
+        .bar-mini-fill {
+            height: 100%;
+        }
+
+        /* SATURATION SCORE */
+        .sat-tag {
+            font-family: var(--mono);
+            font-size: 9px;
+            padding: 2px 6px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .sat-low {
+            color: var(--green);
+            border: 1px solid var(--green);
+        }
+
+        .sat-med {
+            color: var(--gold);
+            border: 1px solid var(--gold-dim);
+        }
+
+        .sat-high {
+            color: var(--red);
+            border: 1px solid var(--red);
+        }
+
+        /* ROADMAP */
+        .roadmap-timeline {
+            position: relative;
+            padding-left: 32px;
+            margin-top: 8px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -28px;
+            top: 4px;
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--gold);
+            background: var(--bg1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-dot::after {
+            content: '';
+            width: 3px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .timeline-month {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .timeline-title {
+            font-family: var(--display);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .timeline-desc {
+            font-family: var(--sans);
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .timeline-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 9px;
+            padding: 3px 8px;
+            letter-spacing: 0.08em;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        /* PROJECT CARDS */
+        .project-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-top: 1px;
+        }
+
+        .project-card {
+            background: var(--bg1);
+            padding: 20px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .project-card:hover {
+            background: var(--bg2);
+        }
+
+        .proj-num {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--dimmed);
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .proj-title {
+            font-family: var(--display);
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .proj-desc {
+            font-family: var(--sans);
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .proj-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .proj-stack {
+            display: flex;
+            gap: 4px;
+        }
+
+        .stack-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            opacity: 0.4;
+        }
+
+        .stack-dot.active {
+            opacity: 1;
+        }
+
+        .proj-effort {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--dimmed);
+            letter-spacing: 0.08em;
+        }
+
+        /* BOTTOM STRIP */
+        .bottom-strip {
+            background: var(--bg1);
+            border-top: 1px solid var(--border);
+            padding: 16px 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .strip-left {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--dimmed);
+            letter-spacing: 0.08em;
+        }
+
+        .strip-right {
+            display: flex;
+            gap: 24px;
+        }
+
+        .strip-right a {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--dimmed);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        .strip-right a:hover {
+            color: var(--gold);
+        }
+
+        /* SCORE INDICATOR */
+        .score-indicator {
+            display: flex;
+            gap: 3px;
+            margin-top: 8px;
+        }
+
+        .score-block {
+            flex: 1;
+            height: 4px;
+            background: var(--bg3);
+        }
+
+        .score-block.filled {
+            background: var(--gold);
+        }
+
+        .score-block.filled.green {
+            background: var(--green);
+        }
+
+        .score-block.filled.red {
+            background: var(--red);
+        }
+
+        /* TOPICS GRID */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .topic-cell {
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-cell::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--h);
+            background: var(--fill);
+            opacity: 0.12;
+            transition: opacity 0.2s;
+        }
+
+        .topic-cell:hover::before {
+            opacity: 0.22;
+        }
+
+        .topic-name {
+            font-family: var(--mono);
+            font-size: 9px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+        }
+
+        .topic-score {
+            font-family: var(--mono);
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            margin-top: 4px;
+        }
+
+        /* Animate in */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeUp 0.5s ease forwards;
+            animation-delay: calc(var(--d, 0) * 0.1s);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* CURSOR */
+        a,
+        button,
+        .role-chip,
+        .project-card,
+        .topic-cell {
+            cursor: crosshair;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">
+            <span class="logo-dot"></span>
+            SKILLPROOF
+        </div>
+        <div style="font-family: var(--mono); font-size: 10px; color: var(--dimmed); margin-left: 4px;">/ INTELLIGENCE
+            PLATFORM</div>
+        <div class="nav-links">
+            <a href="#">API</a>
+            <a href="#">Docs</a>
+            <a href="#">Changelog</a>
+            <div class="nav-badge">BETA · v0.9</div>
+        </div>
+    </nav>
+
+    <!-- TICKER -->
+    <div class="ticker">
+        <div class="ticker-inner">
+            <div class="ticker-item">RUST <span class="up">↑ +42% YoY Demand</span></div>
+            <div class="ticker-item">REACT <span class="up">↑ 89K listings</span></div>
+            <div class="ticker-item">KUBERNETES <span class="up">↑ HIGH ROI</span></div>
+            <div class="ticker-item">PHP <span class="down">↓ Saturation Risk</span></div>
+            <div class="ticker-item">LLM FINE-TUNING <span class="up">↑ +218% YoY</span></div>
+            <div class="ticker-item">GRAPHQL <span class="up">↑ Rising Demand</span></div>
+            <div class="ticker-item">JAVA <span class="down">↓ Market Peaked</span></div>
+            <div class="ticker-item">TYPESCRIPT <span class="up">↑ 61K listings</span></div>
+            <div class="ticker-item">PYTHON <span class="up">↑ #1 Market Demand</span></div>
+            <div class="ticker-item">WASM <span class="up">↑ Emerging Skill</span></div>
+
+            <!-- duplicate for loop -->
+            <div class="ticker-item">RUST <span class="up">↑ +42% YoY Demand</span></div>
+            <div class="ticker-item">REACT <span class="up">↑ 89K listings</span></div>
+            <div class="ticker-item">KUBERNETES <span class="up">↑ HIGH ROI</span></div>
+            <div class="ticker-item">PHP <span class="down">↓ Saturation Risk</span></div>
+            <div class="ticker-item">LLM FINE-TUNING <span class="up">↑ +218% YoY</span></div>
+            <div class="ticker-item">GRAPHQL <span class="up">↑ Rising Demand</span></div>
+            <div class="ticker-item">JAVA <span class="down">↓ Market Peaked</span></div>
+            <div class="ticker-item">TYPESCRIPT <span class="up">↑ 61K listings</span></div>
+            <div class="ticker-item">PYTHON <span class="up">↑ #1 Market Demand</span></div>
+            <div class="ticker-item">WASM <span class="up">↑ Emerging Skill</span></div>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- HERO + INPUT -->
+        <section class="hero">
+            <div class="hero-text fade-in" style="--d:0">
+                <h1>Your code<br>doesn't <em>lie.</em></h1>
+                <p class="hero-sub">
+                    // PROOF-BASED SKILL ANALYSIS<br>
+                    Connect GitHub + LeetCode. We extract<br>
+                    real signal from your actual work — not<br>
+                    what you claim to know.<br>
+                    <br>
+                    // MARKET INTELLIGENCE LAYER<br>
+                    Mapped against 120K+ live job listings<br>
+                    updated weekly. Know your exact ROI gap.
+                </p>
+                <div class="hero-meta">
+                    <div class="meta-stat">
+                        <span class="val">120K+</span>
+                        <span class="lbl">Job Listings</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <div class="meta-stat">
+                        <span class="val">340</span>
+                        <span class="lbl">Skills Tracked</span>
+                    </div>
+                    <div class="meta-divider"></div>
+                    <div class="meta-stat">
+                        <span class="val">Weekly</span>
+                        <span class="lbl">Market Refresh</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-panel fade-in" style="--d:2">
+                <div class="panel-header">
+                    <span class="panel-title">// ANALYSIS TERMINAL</span>
+                    <div class="panel-status">
+                        <div class="status-dot"></div>
+                        ENGINE READY
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <div class="input-label">
+                            GitHub Username
+                            <span class="label-tag">REQUIRED</span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-prefix">github.com /</span>
+                            <input type="text" class="input-field" placeholder="torvalds">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-label">
+                            LeetCode Username
+                            <span class="label-tag">REQUIRED</span>
+                        </div>
+                        <div class="input-row">
+                            <span class="input-prefix">leetcode.com /u/</span>
+                            <input type="text" class="input-field" placeholder="neal_wu">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-label">
+                            Target Role
+                            <span class="label-tag">OPTIONAL</span>
+                        </div>
+                        <div class="role-select-row">
+                            <div class="role-chip active" onclick="selectRole(this)">SWE</div>
+                            <div class="role-chip" onclick="selectRole(this)">ML ENG</div>
+                            <div class="role-chip" onclick="selectRole(this)">DATA</div>
+                            <div class="role-chip" onclick="selectRole(this)">DEVOPS</div>
+                        </div>
+                    </div>
+
+                    <button class="analyze-btn" onclick="runAnalysis()">
+                        RUN ANALYSIS
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <!-- DASHBOARD -->
+        <div class="dashboard">
+
+            <!-- CORE METRICS -->
+            <div class="section-head">
+                <h2>Core Metrics</h2>
+                <div class="section-line"></div>
+                <span class="section-code">// PROFILE · torvalds</span>
+            </div>
+
+            <div class="grid-4">
+                <div class="grid-cell fade-in" style="--d:1">
+                    <div class="cell-label">Skill Strength Index</div>
+                    <div class="cell-value" style="color:var(--gold)">78</div>
+                    <div class="score-indicator">
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                    </div>
+                    <div class="cell-sub"><span class="delta-up">↑ +12</span> vs 30 days ago</div>
+                </div>
+                <div class="grid-cell fade-in" style="--d:2">
+                    <div class="cell-label">Market Match %</div>
+                    <div class="cell-value" style="color:var(--green)">64%</div>
+                    <div class="score-indicator">
+                        <div class="score-block filled green"></div>
+                        <div class="score-block filled green"></div>
+                        <div class="score-block filled green"></div>
+                        <div class="score-block filled green"></div>
+                        <div class="score-block filled green"></div>
+                        <div class="score-block filled green"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                    </div>
+                    <div class="cell-sub">For <span style="color:var(--text)">SWE</span> roles · top 40%</div>
+                </div>
+                <div class="grid-cell fade-in" style="--d:3">
+                    <div class="cell-label">Problems Solved</div>
+                    <div class="cell-value">312</div>
+                    <div class="score-indicator">
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block filled"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                    </div>
+                    <div class="cell-sub">Easy 201 · Med 89 · Hard 22</div>
+                </div>
+                <div class="grid-cell fade-in" style="--d:4">
+                    <div class="cell-label">Saturation Risk</div>
+                    <div class="cell-value" style="color:var(--red)">MED</div>
+                    <div class="score-indicator">
+                        <div class="score-block filled red"></div>
+                        <div class="score-block filled red"></div>
+                        <div class="score-block filled red"></div>
+                        <div class="score-block filled red"></div>
+                        <div class="score-block filled red"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                        <div class="score-block"></div>
+                    </div>
+                    <div class="cell-sub"><span style="color:var(--red)">3 skills</span> at saturation risk</div>
+                </div>
+            </div>
+
+            <!-- SKILLS + LEETCODE + ACTIVITY -->
+            <div class="grid-2-1">
+                <div class="grid-cell fade-in" style="--d:1">
+                    <div class="cell-label">Language Proficiency</div>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Python</span>
+                                <span class="skill-pct">92%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill" style="width:92%; --i:0"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">TypeScript</span>
+                                <span class="skill-pct">78%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill blue" style="width:78%; --i:1"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Go</span>
+                                <span class="skill-pct">61%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill green" style="width:61%; --i:2"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Rust</span>
+                                <span class="skill-pct">34%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill purple" style="width:34%; --i:3"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">C++</span>
+                                <span class="skill-pct">28%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill red" style="width:28%; --i:4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-cell fade-in" style="--d:2">
+                    <div class="cell-label">LeetCode Difficulty</div>
+                    <div class="difficulty-rings">
+                        <div class="ring-item">
+                            <div class="ring">
+                                <svg viewBox="0 0 60 60" width="70" height="70">
+                                    <circle class="ring-bg" cx="30" cy="30" r="28" />
+                                    <circle class="ring-fill" cx="30" cy="30" r="28" stroke="var(--green)"
+                                        style="--offset: calc(176 - 176 * 0.64)"
+                                        stroke-dashoffset="calc(176 - 176 * 0.64)" />
+                                </svg>
+                                <div class="ring-label">
+                                    <span class="ring-num" style="color:var(--green)">201</span>
+                                    <span class="ring-pct">64%</span>
+                                </div>
+                            </div>
+                            <span class="diff-name">Easy</span>
+                        </div>
+                        <div class="ring-item">
+                            <div class="ring">
+                                <svg viewBox="0 0 60 60" width="70" height="70">
+                                    <circle class="ring-bg" cx="30" cy="30" r="28" />
+                                    <circle class="ring-fill" cx="30" cy="30" r="28" stroke="var(--gold)"
+                                        stroke-dashoffset="calc(176 - 176 * 0.286)" />
+                                </svg>
+                                <div class="ring-label">
+                                    <span class="ring-num" style="color:var(--gold)">89</span>
+                                    <span class="ring-pct">29%</span>
+                                </div>
+                            </div>
+                            <span class="diff-name">Medium</span>
+                        </div>
+                        <div class="ring-item">
+                            <div class="ring">
+                                <svg viewBox="0 0 60 60" width="70" height="70">
+                                    <circle class="ring-bg" cx="30" cy="30" r="28" />
+                                    <circle class="ring-fill" cx="30" cy="30" r="28" stroke="var(--red)"
+                                        stroke-dashoffset="calc(176 - 176 * 0.07)" />
+                                </svg>
+                                <div class="ring-label">
+                                    <span class="ring-num" style="color:var(--red)">22</span>
+                                    <span class="ring-pct">7%</span>
+                                </div>
+                            </div>
+                            <span class="diff-name">Hard</span>
+                        </div>
+                    </div>
+                    <div
+                        style="font-family:var(--mono); font-size:10px; color:var(--dimmed); margin-top: 8px; border-top: 1px solid var(--border); padding-top: 12px;">
+                        ⚠ WEAK AREA — Hard problems below market average (12%) for SWE roles
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMMIT HEATMAP -->
+            <div style="background: var(--bg1); border: 1px solid var(--border); border-top: 1px solid var(--border); margin-top: 1px; padding: 24px;"
+                class="fade-in">
+                <div class="cell-label">Commit Activity — Last 52 Weeks</div>
+                <div id="heatmap-container" class="heatmap" style="margin-top:16px"></div>
+                <div style="display:flex; gap:8px; margin-top:12px; align-items:center;">
+                    <span style="font-family:var(--mono);font-size:9px;color:var(--dimmed);">LESS</span>
+                    <div style="width:10px;height:10px;background:var(--bg3)"></div>
+                    <div style="width:10px;height:10px;background:rgba(245,166,35,0.2)"></div>
+                    <div style="width:10px;height:10px;background:rgba(245,166,35,0.4)"></div>
+                    <div style="width:10px;height:10px;background:rgba(245,166,35,0.65)"></div>
+                    <div style="width:10px;height:10px;background:var(--gold)"></div>
+                    <span style="font-family:var(--mono);font-size:9px;color:var(--dimmed);">MORE</span>
+                    <span style="margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--muted)">1,240
+                        contributions · 18 week streak</span>
+                </div>
+            </div>
+
+            <!-- DSA TOPIC MAP -->
+            <div class="section-head">
+                <h2>DSA Topic Analysis</h2>
+                <div class="section-line"></div>
+                <span class="section-code">// LEETCODE SIGNAL</span>
+            </div>
+
+            <div style="background: var(--bg1); border: 1px solid var(--border); padding: 24px;" class="fade-in">
+                <div class="cell-label">Topic Strength Heatmap</div>
+                <div class="topics-grid">
+                    <div class="topic-cell" style="--h:88%;--fill:var(--green)">
+                        <div class="topic-name">Arrays</div>
+                        <div class="topic-score" style="color:var(--green)">88</div>
+                    </div>
+                    <div class="topic-cell" style="--h:82%;--fill:var(--green)">
+                        <div class="topic-name">HashMap</div>
+                        <div class="topic-score" style="color:var(--green)">82</div>
+                    </div>
+                    <div class="topic-cell" style="--h:76%;--fill:var(--gold)">
+                        <div class="topic-name">Trees</div>
+                        <div class="topic-score" style="color:var(--gold)">76</div>
+                    </div>
+                    <div class="topic-cell" style="--h:71%;--fill:var(--gold)">
+                        <div class="topic-name">2-Pointer</div>
+                        <div class="topic-score" style="color:var(--gold)">71</div>
+                    </div>
+                    <div class="topic-cell" style="--h:65%;--fill:var(--gold)">
+                        <div class="topic-name">BFS/DFS</div>
+                        <div class="topic-score" style="color:var(--gold)">65</div>
+                    </div>
+                    <div class="topic-cell" style="--h:58%;--fill:var(--gold)">
+                        <div class="topic-name">Sliding Win</div>
+                        <div class="topic-score" style="color:var(--gold)">58</div>
+                    </div>
+                    <div class="topic-cell" style="--h:42%;--fill:var(--red)">
+                        <div class="topic-name">Dyn. Prog.</div>
+                        <div class="topic-score" style="color:var(--red)">42</div>
+                    </div>
+                    <div class="topic-cell" style="--h:38%;--fill:var(--red)">
+                        <div class="topic-name">Graphs</div>
+                        <div class="topic-score" style="color:var(--red)">38</div>
+                    </div>
+                    <div class="topic-cell" style="--h:31%;--fill:var(--red)">
+                        <div class="topic-name">Backtrack</div>
+                        <div class="topic-score" style="color:var(--red)">31</div>
+                    </div>
+                    <div class="topic-cell" style="--h:24%;--fill:var(--red)">
+                        <div class="topic-name">Trie</div>
+                        <div class="topic-score" style="color:var(--red)">24</div>
+                    </div>
+                    <div class="topic-cell" style="--h:20%;--fill:var(--red)">
+                        <div class="topic-name">Heap</div>
+                        <div class="topic-score" style="color:var(--red)">20</div>
+                    </div>
+                    <div class="topic-cell" style="--h:16%;--fill:var(--red)">
+                        <div class="topic-name">Seg. Tree</div>
+                        <div class="topic-score" style="color:var(--red)">16</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MARKET INTELLIGENCE -->
+            <div class="section-head">
+                <h2>Market Intelligence</h2>
+                <div class="section-line"></div>
+                <span class="section-code">// 120K LISTINGS · REFRESHED WED</span>
+            </div>
+
+            <div class="grid-3">
+                <div class="grid-cell fade-in" style="--d:1">
+                    <div class="cell-label">Market Demand Score</div>
+                    <div class="market-score-display">
+                        <div class="score-big">64</div>
+                        <div class="score-denom">/100</div>
+                    </div>
+                    <div class="score-desc">
+                        Your current stack matches 64 of 100<br>
+                        skill requirements for SWE roles.<br><br>
+                        <span style="color:var(--gold)">+23 pts possible</span> by acquiring<br>
+                        Rust, Kubernetes, and System Design.
+                    </div>
+                </div>
+
+                <div class="grid-cell" style="grid-column: span 2; fade-in">
+                    <div class="cell-label">Skill Demand vs. Your Profile</div>
+                    <table class="demand-table">
+                        <thead>
+                            <tr>
+                                <th>Skill</th>
+                                <th>Job Demand</th>
+                                <th>Your Level</th>
+                                <th>ROI</th>
+                                <th>Saturation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="skill-pill"
+                                        style="border-color:var(--green);color:var(--green)">Python</span></td>
+                                <td>
+                                    <div class="bar-mini">
+                                        <div class="bar-mini-fill" style="width:92%;height:2px;background:var(--green)">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span style="color:var(--green)">Strong</span></td>
+                                <td style="color:var(--gold)">High</td>
+                                <td><span class="sat-tag sat-low">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="skill-pill">TypeScript</span></td>
+                                <td>
+                                    <div class="bar-mini">
+                                        <div class="bar-mini-fill" style="width:88%;height:2px;background:var(--gold)">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span style="color:var(--gold)">Good</span></td>
+                                <td style="color:var(--gold)">High</td>
+                                <td><span class="sat-tag sat-low">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="skill-pill"
+                                        style="border-color:var(--gold);color:var(--gold)">Kubernetes</span></td>
+                                <td>
+                                    <div class="bar-mini">
+                                        <div class="bar-mini-fill" style="width:74%;height:2px;background:var(--gold)">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span style="color:var(--red)">Missing</span></td>
+                                <td style="color:var(--gold)">Very High</td>
+                                <td><span class="sat-tag sat-low">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="skill-pill"
+                                        style="border-color:var(--gold);color:var(--gold)">Rust</span></td>
+                                <td>
+                                    <div class="bar-mini">
+                                        <div class="bar-mini-fill" style="width:42%;height:2px;background:var(--gold)">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span style="color:var(--red)">Weak</span></td>
+                                <td style="color:var(--gold)">Very High</td>
+                                <td><span class="sat-tag sat-low">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="skill-pill">Java</span></td>
+                                <td>
+                                    <div class="bar-mini">
+                                        <div class="bar-mini-fill"
+                                            style="width:68%;height:2px;background:var(--dimmed)"></div>
+                                    </div>
+                                </td>
+                                <td><span style="color:var(--muted)">N/A</span></td>
+                                <td style="color:var(--muted)">Low</td>
+                                <td><span class="sat-tag sat-high">High</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="skill-pill" style="border-color:var(--purple);color:var(--purple)">LLM
+                                        APIs</span></td>
+                                <td>
+                                    <div class="bar-mini">
+                                        <div class="bar-mini-fill"
+                                            style="width:55%;height:2px;background:var(--purple)"></div>
+                                    </div>
+                                </td>
+                                <td><span style="color:var(--red)">Missing</span></td>
+                                <td style="color:var(--purple)">Emerging</td>
+                                <td><span class="sat-tag sat-low">Low</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AI ROADMAP -->
+            <div class="section-head">
+                <h2>3-Month Roadmap</h2>
+                <div class="section-line"></div>
+                <span class="section-code">// AI GENERATED · PERSONALIZED</span>
+            </div>
+
+            <div class="grid-2-1" style="margin-top:0">
+                <div class="grid-cell fade-in">
+                    <div class="cell-label">Priority Improvement Plan</div>
+                    <div class="roadmap-timeline">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-month">Month 01 · Weeks 1–4</div>
+                            <div class="timeline-title">DSA Foundation Repair</div>
+                            <div class="timeline-desc">Your Hard problem rate (7%) is significantly below the SWE market
+                                threshold (12–18%). Focus exclusively on Dynamic Programming and Graph traversal
+                                patterns. Target 3 medium + 1 hard problem per day.</div>
+                            <div class="timeline-tags">
+                                <span class="tag">Dynamic Programming</span>
+                                <span class="tag">Graph BFS/DFS</span>
+                                <span class="tag">Topological Sort</span>
+                                <span class="tag">LeetCode Grind</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-month">Month 02 · Weeks 5–8</div>
+                            <div class="timeline-title">Cloud & Infrastructure Stack</div>
+                            <div class="timeline-desc">Kubernetes appears in 74% of senior SWE listings but is absent
+                                from your GitHub. Build a containerized personal project and deploy it. This single
+                                skill adds an estimated +14 pts to your market score.</div>
+                            <div class="timeline-tags">
+                                <span class="tag">Docker</span>
+                                <span class="tag">Kubernetes</span>
+                                <span class="tag">CI/CD Pipeline</span>
+                                <span class="tag">AWS/GCP Basics</span>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-month">Month 03 · Weeks 9–12</div>
+                            <div class="timeline-title">Differentiation Layer</div>
+                            <div class="timeline-desc">Low saturation, high-ROI skills. Rust and LLM API integration
+                                appear in fast-growing job categories. A single portfolio project combining both
+                                positions you in the top 8% of SWE candidates.</div>
+                            <div class="timeline-tags">
+                                <span class="tag">Rust Basics</span>
+                                <span class="tag">LLM API Integration</span>
+                                <span class="tag">System Design</span>
+                                <span class="tag">Portfolio Project</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-cell fade-in" style="--d:2">
+                    <div class="cell-label">Skill Priority Index</div>
+                    <div class="skill-list" style="margin-top:8px">
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Dynamic Programming</span>
+                                <span class="skill-pct" style="color:var(--red)">CRITICAL</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill red" style="width:95%; --i:0"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Kubernetes</span>
+                                <span class="skill-pct" style="color:var(--red)">CRITICAL</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill red" style="width:88%; --i:1"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">System Design</span>
+                                <span class="skill-pct" style="color:var(--gold)">HIGH</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill" style="width:74%; --i:2"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Rust</span>
+                                <span class="skill-pct" style="color:var(--gold)">HIGH</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill" style="width:62%; --i:3"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">LLM APIs</span>
+                                <span class="skill-pct" style="color:var(--purple)">EMERGING</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill purple" style="width:50%; --i:4"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-top">
+                                <span class="skill-name">Graph Algorithms</span>
+                                <span class="skill-pct" style="color:var(--gold)">MED</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-fill blue" style="width:38%; --i:5"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+                        <div class="cell-label">Projected Score @ 90 days</div>
+                        <div style="display:flex; align-items:baseline; gap:8px; margin-top:8px;">
+                            <span
+                                style="font-family:var(--mono); font-size:32px; font-weight:600; color:var(--green)">89</span>
+                            <span style="font-family:var(--mono); font-size:12px; color:var(--muted)">/ 100 · <span
+                                    style="color:var(--green)">+11 pts</span></span>
+                        </div>
+                        <div
+                            style="font-family:var(--mono); font-size:9px; color:var(--dimmed); margin-top:4px; line-height:1.6;">
+                            TOP 15% PERCENTILE FOR SWE ROLES<br>IF ROADMAP IS FOLLOWED
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUGGESTED MICRO PROJECTS -->
+            <div class="section-head">
+                <h2>Suggested Micro-Projects</h2>
+                <div class="section-line"></div>
+                <span class="section-code">// PORTFOLIO ACCELERATORS</span>
+            </div>
+
+            <div class="project-cards">
+                <div class="project-card">
+                    <div class="proj-num">PROJECT_01 / MONTH 2</div>
+                    <div class="proj-title">K8s-Deployed FastAPI Microservice</div>
+                    <div class="proj-desc">Build a REST API with FastAPI, containerize it with Docker, deploy to a local
+                        Kubernetes cluster with horizontal pod autoscaling. Document the architecture.</div>
+                    <div class="proj-meta">
+                        <div class="proj-stack">
+                            <span style="font-family:var(--mono);font-size:9px;color:var(--muted)">Python · Docker ·
+                                K8s</span>
+                        </div>
+                        <div class="proj-effort">2 WEEKS</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="proj-num">PROJECT_02 / MONTH 3</div>
+                    <div class="proj-title">Rust CLI Tool with Crates.io Publish</div>
+                    <div class="proj-desc">Build a real utility CLI in Rust (file processor, JSON formatter, or network
+                        tool), publish it to crates.io. Shows initiative in low-saturation tech.</div>
+                    <div class="proj-meta">
+                        <div class="proj-stack">
+                            <span style="font-family:var(--mono);font-size:9px;color:var(--muted)">Rust · CLI ·
+                                Crates.io</span>
+                        </div>
+                        <div class="proj-effort">2 WEEKS</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="proj-num">PROJECT_03 / MONTH 3</div>
+                    <div class="proj-title">LLM-Powered Code Review Bot</div>
+                    <div class="proj-desc">GitHub Action that uses an LLM API to auto-review PRs. Combines your Python
+                        strength with the emerging LLM skill. High visibility project for job applications.</div>
+                    <div class="proj-meta">
+                        <div class="proj-stack">
+                            <span style="font-family:var(--mono);font-size:9px;color:var(--muted)">Python · GitHub API ·
+                                LLM</span>
+                        </div>
+                        <div class="proj-effort">1.5 WEEKS</div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /dashboard -->
+
+    </main>
+
+    <!-- BOTTOM STRIP -->
+    <div class="bottom-strip">
+        <div class="strip-left">
+            SKILLPROOF v0.9-beta · Data sourced from GitHub API, LeetCode GraphQL, LinkedIn Jobs
+        </div>
+        <div class="strip-right">
+            <a href="#">Privacy</a>
+            <a href="#">API Docs</a>
+            <a href="#">GitHub</a>
+            <a href="#">Feedback</a>
+        </div>
+    </div>
+
+    <script>
+        // Role chip selection
+        function selectRole(el) {
+            document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // Analyze button with animation
+        function runAnalysis() {
+            const btn = document.querySelector('.analyze-btn');
+            btn.textContent = '';
+            btn.innerHTML = '<span style="font-family:var(--mono);font-size:12px;letter-spacing:0.12em">ANALYZING</span><span style="animation:ellipsis 1.2s infinite">...</span>';
+            setTimeout(() => {
+                btn.innerHTML = '✓ ANALYSIS COMPLETE <span class="btn-arrow">→</span>';
+                btn.style.background = 'var(--green)';
+            }, 2200);
+        }
+
+        // Generate heatmap
+        const container = document.getElementById('heatmap-container');
+        const weights = [0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 4];
+        for (let w = 0; w < 52; w++) {
+            const col = document.createElement('div');
+            col.className = 'heatmap-col';
+            for (let d = 0; d < 7; d++) {
+                const cell = document.createElement('div');
+                const r = weights[Math.floor(Math.random() * weights.length)];
+                cell.className = `heatmap-cell h${r}`;
+                col.appendChild(cell);
+            }
+            container.appendChild(col);
+        }
+    </script>
+</body>
+
+</html>
