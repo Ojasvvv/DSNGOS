@@ -16,9 +16,9 @@ export function SkillDifficulty({ githubData, leetData, aiData }: Props) {
     const colors = ["bg-gold", "bg-blue", "bg-green", "bg-purple", "bg-red"];
     const totalCount = languages.reduce((s: number, l: any) => s + l.count, 0) || 1;
 
-    const easy = leetData?.easySolved ?? 201;
-    const medium = leetData?.mediumSolved ?? 89;
-    const hard = leetData?.hardSolved ?? 22;
+    const easy = leetData?.easySolved ?? 0;
+    const medium = leetData?.mediumSolved ?? 0;
+    const hard = leetData?.hardSolved ?? 0;
     const total = (easy + medium + hard) || 1;
 
     const weakArea = aiData?.weaknesses?.[0] ?? "Hard problems below market average (12%) for SWE roles";

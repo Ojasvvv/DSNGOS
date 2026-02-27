@@ -11,10 +11,10 @@ export function CoreMetrics({ githubData, leetData, aiData, role }: Props) {
     const skillScore = aiData?.skill_assessment?.strength_score ?? 78;
     const marketMatch = aiData?.skill_assessment?.market_match ?? 64;
     const saturation = aiData?.skill_assessment?.saturation_risk ?? "MED";
-    const totalSolved = leetData?.totalSolved ?? leetData?.data?.totalSolved ?? 312;
-    const easySolved = leetData?.easySolved ?? 201;
-    const medSolved = leetData?.mediumSolved ?? 89;
-    const hardSolved = leetData?.hardSolved ?? 22;
+    const totalSolved = leetData?.totalSolved ?? leetData?.data?.totalSolved ?? leetData?.solvedProblem ?? 0;
+    const easySolved = leetData?.easySolved ?? 0;
+    const medSolved = leetData?.mediumSolved ?? 0;
+    const hardSolved = leetData?.hardSolved ?? 0;
 
     const satColor = saturation === "LOW" ? "text-green" : saturation === "HIGH" ? "text-red" : "text-red";
     const satFilled = saturation === "LOW" ? 3 : saturation === "HIGH" ? 8 : 5;

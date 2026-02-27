@@ -10,6 +10,7 @@ import { DsaTopics } from "@/components/dashboard/dsa-topics";
 import { MarketIntelligence } from "@/components/dashboard/market-intelligence";
 import { AiRoadmap } from "@/components/dashboard/ai-roadmap";
 import { MicroProjects } from "@/components/dashboard/micro-projects";
+import { StatsCharts } from "@/components/dashboard/stats-charts";
 import { fetchGithubStats, fetchLeetCodeStats } from "@/lib/api";
 
 type Role = "SWE" | "ML ENG" | "DATA" | "DEVOPS";
@@ -192,8 +193,8 @@ export default function Home() {
                       key={r}
                       onClick={() => setRole(r)}
                       className={`flex-1 py-2 px-3 font-mono text-[10px] tracking-[0.06em] text-center transition-all border ${role === r
-                          ? "border-gold text-gold bg-[rgba(245,166,35,0.08)]"
-                          : "border-border-dark text-muted bg-bg hover:border-gold-dim hover:text-gold hover:bg-[rgba(245,166,35,0.04)]"
+                        ? "border-gold text-gold bg-[rgba(245,166,35,0.08)]"
+                        : "border-border-dark text-muted bg-bg hover:border-gold-dim hover:text-gold hover:bg-[rgba(245,166,35,0.04)]"
                         }`}
                     >
                       {r}
@@ -226,6 +227,7 @@ export default function Home() {
           <div ref={dashboardRef} id="dashboard" className="max-w-[1400px] mx-auto px-16 pb-20">
             <CoreMetrics githubData={githubData} leetData={leetData} aiData={aiData} role={role} />
             <SkillDifficulty githubData={githubData} leetData={leetData} aiData={aiData} />
+            <StatsCharts githubData={githubData} leetData={leetData} />
             <CommitHeatmap />
             <DsaTopics aiData={aiData} />
             <MarketIntelligence aiData={aiData} role={role} />
